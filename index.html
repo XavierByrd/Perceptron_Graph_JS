@@ -5,20 +5,33 @@
     <title>GraphJS</title>
   </head>
   <body>
+    <!-- Canvas to draw our Graph to -->
     <canvas id="graph"></canvas>
+
+    <!-- My Custom Libraries -->
+    <script type="text/javascript" src="neuralnetjs/Trainer.js"></script>
+    <script type="text/javascript" src="neuralnetjs/perceptron.js"></script>
+    <script type="text/javascript" src='neuralnetjs/supervisedlearning.js'></script>
+    <!--<script type="text/javascript" src="neuralnetjs/perceptrontest.js"></script>-->
     <script type="text/javascript" src="graphjs/graph.js"></script>
+
     <!-- Only for test, example of usage -->
     <script>
-      var g = new Graph("graph", 500, 500);
-      g.defineEquation("x");
-      g.defineScale(10, 10, 8);
-      g.enableGraphTicks(true);
-      g.enablePointEvaluation(true);
-      g.drawGraphAxis();
 
-      pointArray = g.generateRandomPoints(20);
-      g.drawPointsAsCircles(pointArray);
-      g.graphEquation();
+    var equation = "(2 * x) + 1";
+    var g = new Graph("graph", 300, 300);
+    g.defineEquation(equation);
+    g.defineScale(10,10, 8);
+    g.enableGraphTicks(true);
+    g.enablePointEvaluation(true);
+
+    g.drawGraphAxis();
+
+    g.graphEquation();
+
+    pointArray = g.generateRandomPoints(20);
+    g.drawPointsAsCircles(pointArray);
+
     </script>
   </body>
 </html>

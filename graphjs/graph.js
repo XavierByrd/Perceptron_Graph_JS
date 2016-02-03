@@ -75,7 +75,7 @@ Graph.prototype = {
       actualX: Math.floor(Math.random() * (xMax - xMin + 1)) + xMin,
       actualY: Math.floor(Math.random() * (yMax - yMin + 1)) + yMin,
     }
-    console.log("("+"x: " + this.f(point.actualX) + ", y:" + point.actualY +")");
+    //console.log("("+"x: " + this.f(point.actualX) + ", y:" + point.actualY +")");
     return point;
   },
 
@@ -149,6 +149,7 @@ Graph.prototype = {
   drawPointsAsCircles: function(pointArray) {
     for(var i = 0; i < pointArray.length; i++) {
       this.screenContext.beginPath();
+      this.screenContext.strokeStyle = "black";
       this.screenContext.arc(this.upscaleX(pointArray[i].actualX), this.upscaleY(pointArray[i].actualY), 3, 0, 2*Math.PI);
       if(this.pointEvaluationEnabled) {
           if(pointArray[i].actualY < this.f(pointArray[i].actualX)) {
