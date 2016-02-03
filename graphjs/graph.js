@@ -60,14 +60,22 @@ Graph.prototype = {
     return this.origin.y - y;
   },
 
+  upscaleX: function(x) {
+    return (x * this.scalarX) + this.origin.x;
+  },
+
+  upscaleY: function(y) {
+    return this.origin.y - (y * this.scalarY);
+  },
+
   // Get a randomly generated point
   getPoint: function(xMin, xMax, yMin, yMax) {
     var point =
     {
-      x: this.convertX(Math.floor(Math.random() * (xMax - xMin + 1)) + xMin),
-      y: this.convertY(Math.floor(Math.random() * (yMax - yMin + 1)) + yMin),
-      context: this.screenContext
+      actualX: Math.floor(Math.random() * (xMax - xMin + 1)) + xMin,
+      actualY: Math.floor(Math.random() * (yMax - yMin + 1)) + yMin,
     }
+    console.log("("+"x: " + this.f(point.actualX) + ", y:" + point.actualY +")");
     return point;
   },
 
@@ -75,7 +83,7 @@ Graph.prototype = {
   generateRandomPoints(n) {
     var points = [];
     for(var i = 0; i < n; i++) {
-      points.push(this.getPoint(-this.screen.width, this.screen.width, -this.screen.height, this.screen.height));
+      points.push(this.getPoint( -this.scaleX + 1, this.scaleX - 1, -this.scaleY + 1, this.scaleY - 1));
     }
     return points;
   },
@@ -138,24 +146,32 @@ Graph.prototype = {
     this.pointEvaluationEnabled = enable;
   },
 
-  drawPoints: function(pointArray) {
-    if(this.pointEvaluationEnabled) {
-      if(point.y < f(point.x)) {
-        this.screenContext.fillStyle = "red";
+  drawPointsAsCircles: function(pointArray) {
+    for(var i = 0; i < pointArray.length; i++) {
+      this.screenContext.beginPath();
+      this.screenContext.arc(this.upscaleX(pointArray[i].actualX), this.upscaleY(pointArray[i].actualY), 3, 0, 2*Math.PI);
+      if(this.pointEvaluationEnabled) {
+          if(pointArray[i].actualY < this.f(pointArray[i].actualX)) {
+            this.screenContext.fillStyle  = "red";
+          } else {
+            this.screenContext.fillStyle  = "green";
+          }
       } else {
-        this.screenContext.fillStyle  = "green";
+        this.screenContext.fillStyle = "gray";
       }
-    } else {
-      this.screenContext.fillStyle = "black";
+      this.screenContext.fill();
+      this.screenContext.stroke();
     }
-
-    pointArray.forEach(function(point) {
-      point.context.fillRect(point.x, point.y, 5, 5);
-    });
   },
 
-  graphEquation: function() {
 
+  graphEquation: function() {
+    this.screenContext.beginPath();
+    this.screenContext.strokeStyle = "blue";
+    for(var x = -this.screen.width; x < this.screen.width; x++ ) {
+      this.screenContext.lineTo(this.convertX(x) , this.convertY(this.f(x)));
+    }
+    this.screenContext.stroke();
   }
 
 };
