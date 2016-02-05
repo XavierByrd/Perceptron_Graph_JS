@@ -2,7 +2,7 @@
   'use strict';
   function define_Graph() {
     var Graph = {};
-    Graph.create = function(canvas, width, height) {
+    Graph.create = function(canvas, width, height, x, y) {
       Graph.c = document.getElementById(canvas);
 
       Graph.c.width = width;
@@ -10,8 +10,8 @@
 
       Graph. origin = {x: Graph.c.width/2, y: Graph.c.height/2};
       Graph. ctx = Graph.c.getContext("2d");
-      Graph. xaxis = 3;
-      Graph. yaxis = 10;
+      Graph. xaxis = typeof(x) !== 'undefined'? x : 3;
+      Graph. yaxis = typeof(y) !== 'undefined' ? y : 10;
       Graph. point = {x: null, y: null};
       Graph. smoothFactor = 1;
       Graph. ticklength = 5;
@@ -26,11 +26,16 @@
       Graph.ctx.stroke();
     },
 
+    Graph.defineScale = function(x, y) {
+      Graph.xaxis = x;
+      Graph.yaxis = y;
+    },
+
     Graph.graph = function() {
       Graph.ctx.beginPath();
       Graph.ctx.strokeStyle = "#06a2cb";
       for(var x = -Graph.xaxis; x < Graph.xaxis; x += (Graph.smoothFactor * 0.01)) {
-        //console.log("(" +x+","+f(x)+")\n" + "(" +Graph.convertToCanvasX(x)+","+Graph.convertToScaleY(f(x))+")\n");
+        //console.log("(" +x+","+f(x)+")\n" + "(" +Graph.Graph.convertToCanvasX(x)+","+Graph.convertToScaleY(f(x))+")\n");
         Graph.ctx.lineTo(Graph.convertToCanvasX(x) , Graph.convertToCanvasY(Graph.f(x)));
       }
       Graph.ctx.stroke();
@@ -99,12 +104,13 @@
         return points;
       },
 
-      Graph.drawPoints = function(points) {
+      Graph.drawPoints = function(points, size) {
         for(var i = 0; i < points.length; i++) {
           points[i] = Graph.evaluatePoint(points[i]);
           Graph.ctx.beginPath();
           Graph.ctx.strokeStyle = "#192823";
-          Graph.ctx.arc(Graph.convertToCanvasX(points[i].x), Graph.convertToCanvasY(points[i].y), 3, 0, 2*Math.PI);
+          var radius = typeof(size) !== "undefined" ? size: 3;
+          Graph.ctx.arc(Graph.convertToCanvasX(points[i].x), Graph.convertToCanvasY(points[i].y), radius, 0, 2*Math.PI);
           if(points[i].isAboveEquation) {
             Graph.ctx.fillStyle = "#218559";
           } else {
@@ -123,7 +129,7 @@
 
         return evaluatedPoint;
       }
-      
+
     console.log("Axis' Created");
     return Graph;
   }

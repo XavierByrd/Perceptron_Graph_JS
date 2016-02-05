@@ -10,12 +10,11 @@
 
     <script type="text/javascript" src="graph.js"></script>
     <script>
-      Graph.create("canvas", 300, 300);
-      Graph.equation("x");
+      Graph.create("canvas", 500, 500, 20, 20);
+      Graph.equation("x * x");
       Graph.drawTicks();
       Graph.graph();
-      var points = Graph.generateRandomPoints(10);
-      Graph.drawPoints(points);
+      Graph.drawPoints(Graph.generateRandomPoints(20), 3);
     </script>
   </body>
 </html>
