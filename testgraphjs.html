@@ -14,14 +14,24 @@
 
     <script>
       Graph.create("canvas", 500, 500, 3, 10);
-      Graph.equation("x");
+      Graph.equation("(1/x)");
       Graph.drawTicks();
       Graph.graph();
       var perceptron = new Perceptron();
       var trainer = new Trainer();
       perceptron.create(3);
 
-      var numexamples = 200;
+      // ~86% Parabola x^2
+      //perceptron.weights = [0.007960222263361618,0.04952221194176462,-0.1679765467164397];
+
+      // ~99% 2x + 1
+      //perceptron.weights = [-0.4583758725287963,0.24325733089195656,-0.21981947688797832];
+
+      // ~94.5% 1/x
+      //perceptron.weights = [-0.004542168106433209,0.05762977820930386,-0.0021609059331221363];
+
+      // Set to 0 to turn of training feature
+      var numexamples = 0;
 
       for(var i = 0; i < numexamples; i++) {
         var p = Graph.generateRandomPoints(1);
@@ -46,7 +56,8 @@
       console.log("");
       console.log("Conducting test:");
       var correct = 0;
-      var total = 50;
+      var total = 200;
+
       for(var i = 0; i < total; i++) {
         var p = Graph.generateRandomPoints(1);
         var yline = Graph.f(p[0].x);
@@ -58,10 +69,10 @@
         }
         trainer.create(p[0].x, p[0].y, answer);
         var panswer = perceptron.feedforeward(trainer.inputs, 1);
-        console.log("Perceptron guess: " + panswer);
+        //console.log("Perceptron guess: " + panswer);
         if(answer == panswer) {
           correct++;
-          Graph.drawPoints(p, 3);
+          Graph.drawPoints(p, 4);
         } else {
           Graph.drawPoints(p, 6, true);
         }

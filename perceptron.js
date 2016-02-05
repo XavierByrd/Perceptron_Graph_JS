@@ -1,6 +1,6 @@
 function Perceptron() {
   this.weights = [];
-  this.learningconstant = 0.01;
+  this.learningconstant = 0.00557981;
 }
 
 Perceptron.prototype = {
