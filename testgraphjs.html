@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test GraphJS</title>
+  </head>
+  <body>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="text/javascript" src="graph.js"></script>
+    <script>
+      Graph.create("canvas", 300, 300);
+      Graph.equation("x");
+      Graph.drawTicks();
+      Graph.graph();
+      var points = Graph.generateRandomPoints(10);
+      Graph.drawPoints(points);
+    </script>
+  </body>
+</html>
