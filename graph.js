@@ -13,7 +13,7 @@
       Graph. xaxis = typeof(x) !== 'undefined'? x : 3;
       Graph. yaxis = typeof(y) !== 'undefined' ? y : 10;
       Graph. point = {x: null, y: null};
-      Graph. smoothFactor = 1;
+      Graph. smoothFactor = 25;
       Graph. ticklength = 5;
       Graph. xscale = Graph.origin.x/Graph.xaxis;
       Graph. yscale = Graph.origin.y/Graph.yaxis;
@@ -34,15 +34,25 @@
     Graph.graph = function() {
       Graph.ctx.beginPath();
       Graph.ctx.strokeStyle = "#06a2cb";
-      for(var x = -Graph.xaxis; x < Graph.xaxis; x += (Graph.smoothFactor * 0.01)) {
-        //console.log("(" +x+","+f(x)+")\n" + "(" +Graph.Graph.convertToCanvasX(x)+","+Graph.convertToScaleY(f(x))+")\n");
-        Graph.ctx.lineTo(Graph.convertToCanvasX(x) , Graph.convertToCanvasY(Graph.f(x)));
+      var errorFlag = false;
+      for(var x = -Graph.xaxis; x < Graph.xaxis + 1; x += (Graph.smoothFactor * 0.01)) {
+        ////console.log("(" +x+","+f(x)+")\n" + "(" +Graph.Graph.convertToCanvasX(x)+","+Graph.convertToScaleY(f(x))+")\n");
+        if(errorFlag === true) {
+          Graph.ctx.stroke();
+          errorFlag = false;
+          Graph.ctx.beginPath();
+        }
+        if(Graph.f(x) != Infinity) {
+          Graph.ctx.lineTo(Graph.convertToCanvasX(x) , Graph.convertToCanvasY(Graph.f(x)));
+        } else {
+          errorFlag = true;
+        }
       }
       Graph.ctx.stroke();
     },
 
     Graph.equation = function(equation) {
-      console.log("Equation saved.");
+      //console.log("Equation saved.");
       Graph.f = function(x) {
           return eval(equation);
       }
@@ -72,7 +82,7 @@
         Graph.ctx.lineTo(Graph.origin.y +  Graph.ticklength/2, y);
       }
       Graph.ctx.stroke();
-      console.log("Ticks Drawn");
+      //console.log("Ticks Drawn");
     },
 
       Graph.convertToCanvasX = function(x) {
@@ -104,7 +114,7 @@
         return points;
       },
 
-      Graph.drawPoints = function(points, size) {
+      Graph.drawPoints = function(points, size, flag) {
         for(var i = 0; i < points.length; i++) {
           points[i] = Graph.evaluatePoint(points[i]);
           Graph.ctx.beginPath();
@@ -112,9 +122,9 @@
           var radius = typeof(size) !== "undefined" ? size: 3;
           Graph.ctx.arc(Graph.convertToCanvasX(points[i].x), Graph.convertToCanvasY(points[i].y), radius, 0, 2*Math.PI);
           if(points[i].isAboveEquation) {
-            Graph.ctx.fillStyle = "#218559";
+            Graph.ctx.fillStyle = typeof(flag) != "undefined" ? "purple" : "#218559";
           } else {
-            Graph.ctx.fillStyle = "#dd1e2f";
+            Graph.ctx.fillStyle = typeof(flag) != "undefined" ? "purple" : "#dd1e2f";
           }
           Graph.ctx.fill();
           Graph.ctx.stroke();
@@ -130,13 +140,13 @@
         return evaluatedPoint;
       }
 
-    console.log("Axis' Created");
+    //console.log("Axis' Created");
     return Graph;
   }
 
   if(typeof(Graph) === 'undefined') {
     window.Graph = define_Graph();
   } else {
-    console.log("Graph is already defined.");
+    //console.log("Graph is already defined.");
   }
 })(window);

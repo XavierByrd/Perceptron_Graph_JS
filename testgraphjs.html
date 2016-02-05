@@ -9,12 +9,67 @@
     <canvas id="canvas"></canvas>
 
     <script type="text/javascript" src="graph.js"></script>
+    <script type="text/javascript" src="perceptron.js"></script>
+    <script type="text/javascript" src="networktrainer.js"></script>
+
     <script>
-      Graph.create("canvas", 500, 500, 20, 20);
-      Graph.equation("x * x");
+      Graph.create("canvas", 500, 500, 3, 10);
+      Graph.equation("x");
       Graph.drawTicks();
       Graph.graph();
-      Graph.drawPoints(Graph.generateRandomPoints(20), 3);
+      var perceptron = new Perceptron();
+      var trainer = new Trainer();
+      perceptron.create(3);
+
+      var numexamples = 200;
+
+      for(var i = 0; i < numexamples; i++) {
+        var p = Graph.generateRandomPoints(1);
+        var yline = Graph.f(p[0].x);
+        var answer = 0;
+
+        if(p[0].y < yline) {
+          answer = -1;
+        } else {
+          answer = 1;
+        }
+
+        trainer.create(p[0].x, p[0].y, answer);
+        perceptron.train(trainer.inputs, answer);
+      }
+
+      ////////////////////////////////
+
+      console.log("Training Done.");
+      console.log("Number of training points: " + numexamples);
+      console.log("Final Perceptron: [" + perceptron.weights+"]");
+      console.log("");
+      console.log("Conducting test:");
+      var correct = 0;
+      var total = 50;
+      for(var i = 0; i < total; i++) {
+        var p = Graph.generateRandomPoints(1);
+        var yline = Graph.f(p[0].x);
+        var answer = 0;
+        if(p[0].y < yline) {
+          answer = -1;
+        } else {
+          answer = 1;
+        }
+        trainer.create(p[0].x, p[0].y, answer);
+        var panswer = perceptron.feedforeward(trainer.inputs, 1);
+        console.log("Perceptron guess: " + panswer);
+        if(answer == panswer) {
+          correct++;
+          Graph.drawPoints(p, 3);
+        } else {
+          Graph.drawPoints(p, 6, true);
+        }
+      }
+      console.log("Done.");
+      console.log("Perceptron success: " + correct + "/" + total);
+      console.log("Success: " + (correct/total) * 100 + "%");
+      /////////////////////////////////////
     </script>
   </body>
 </html>
